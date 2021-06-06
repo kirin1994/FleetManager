@@ -1,16 +1,13 @@
+using FleetManager.Application;
+using FleetManager.Infrastructure.Driver;
+using FleetManager.Infrastructure.Driver.Persistance;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FleetManager.Api
 {
@@ -28,6 +25,10 @@ namespace FleetManager.Api
         {
 
             services.AddControllers();
+            services.AddMediatR(typeof(Startup), typeof(GetDriverByIdQuery));
+            services.AddDbContext<DriverContext>();
+            services.AddScoped<IDriverRepository, DriverRepository>();
+            services.AddAutoMapper(typeof(GetDriverByIdQuery));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FleetManager.Api", Version = "v1" });
